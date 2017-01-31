@@ -1,0 +1,27 @@
+{
+    "name": "edwardlyons/pf-git-hooks",
+    "description": "Standard git hooks for Pixel Fusion projects",
+    "authors": [
+        {
+            "name": "Eduardo Leoni",
+            "email": "eduardo@pixelfusion.co.nz"
+        }
+    ],
+    "type": "library",
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~3.7@stable",
+        "squizlabs/php_codesniffer": "^2.7"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "bash src/setup/git-hooks.sh"
+        ],
+        "post-update-cmd": [
+            "bash src/setup/git-hooks.sh"
+        ]
+    },
+    "minimum-stability": "stable"
+}

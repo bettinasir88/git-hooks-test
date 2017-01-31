@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# @source: https://gist.github.com/fdemiramon/0423b4308218d417fbf3
+
+PROJECT=$(git rev-parse --show-toplevel)
+STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD | grep \\\\.php`
+
+PHPCS_BIN="$PROJECT/vendor/bin/phpcs"
+PHPCS_FIXER_BIN="$PROJECT/vendor/bin/phpcbf"
+PHPCS_CODING_STANDARD="$PROJECT/phpcs.xml"
+
+# Determine if a file list is passed
+if [ "$#" -eq 1 ]
+then
+    oIFS=$IFS
+    IFS='
+    '
+    SFILES="$1"
+    IFS=$oIFS
+fi
+SFILES=${SFILES:-$STAGED_FILES_CMD}
+
+# Run PHP code sniffer and try to fix violations
+if [ "$FILES" != "" ]
+then
+    printf "\nRunning code sniffer...\n\n"
+    $PHPCS_BIN --standard=$PHPCS_CODING_STANDARD -n -p $FILES
+    if [ $? != 0 ]
+    then
+        printf "Coding standard violations detected, running phpcbf...\n\n"
+        $PHPCS_FIXER_BIN --standard=$PHPCS_CODING_STANDARD -n -p $FILES
+        git add $FILES
+
+        printf "Running code sniffer again...\n\n"
+        $PHPCS_BIN --standard=$PHPCS_CODING_STANDARD -n -p $FILES
+        if [ $? != 0 ]
+        then
+            printf "Code errors found that can't be fixed automatically."
+            exit 1
+        fi
+    fi
+fi
+
+exit $?

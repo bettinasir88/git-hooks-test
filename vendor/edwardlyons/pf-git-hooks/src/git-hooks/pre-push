@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Fix path so GUIs know where to find npm
+PATH="$PATH:/usr/local/bin"
+
+npm test --silent || exit 1

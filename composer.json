@@ -1,0 +1,5 @@
+{
+    "require": {
+        "edwardlyons/pf-git-hooks": "^0.0.1"
+    }
+}
